@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from file_utils import parse_filename 
 from sql_query import ORIENTATION_QUERY as orientation_query
+from xmp_embed import write_xmp
 load_dotenv()
 
 conn = pymysql.connect(
@@ -15,8 +16,7 @@ conn = pymysql.connect(
     charset="utf8mb4"
 )
 
-filename = "1485392407.Thu.Jan.26_12_00_07.AEST.2017.goldcst.c5.snap.jpg"
-
+filename = "1485388807.Thu.Jan.26_11_00_07.AEST.2017.goldcst.c5.snap.jpg"
 parsed_name = parse_filename(filename=filename)
 
 timestamp = parsed_name["timestamp"]
@@ -29,4 +29,6 @@ with conn:
     with conn.cursor() as cur:
         cur.execute(orientation_query,params)
         tilt, roll, azimuth = (cur.fetchone())
-        print(tilt, roll, azimuth)
+
+
+write_xmp(filename, tilt, roll, azimuth)
